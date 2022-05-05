@@ -1,0 +1,17 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+test-report.xml
+
+# production
+/build
+
+# editor configs
+/.vscode
+
+# hygen
+/_templates

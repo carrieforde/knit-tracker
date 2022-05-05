@@ -1,0 +1,113 @@
+{
+  "name": "knit-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "react-scripts build",
+    "format": "prettier --list-different --write .",
+    "lighthouse": "lhci autorun",
+    "lint": "run-p -c lint:es lint:style",
+    "lint:ci": "run-s -c lint:es lint:style",
+    "lint:es": "eslint './src/**/*.{js,jsx,ts,tsx}' --max-warnings=10",
+    "lint:style": "stylelint './src/**/*.{css,scss}'",
+    "preflight": "run-s -c format lint test",
+    "serve": "serve -s build -l 4200",
+    "start": "react-scripts start",
+    "test": "react-scripts test --watchAll=false --maxWorkers=50% --coverage --testResultsProcessor jest-sonar-reporter",
+    "test:ci": "react-scripts test --watchAll=false --maxWorkers=2 --coverage --testResultsProcessor jest-sonar-reporter",
+    "test:watch": "react-scripts test --watch --maxWorkers=25%"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.8.2",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/react-hooks": "^7.0.2",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.4.0",
+    "@types/lodash": "^4.14.178",
+    "@types/node": "^16.7.13",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9",
+    "eslint-config-prettier": "^8.3.0",
+    "husky": "^7.0.0",
+    "jest-sonar-reporter": "^2.0.0",
+    "lint-staged": "^12.1.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
+    "serve": "^13.0.2",
+    "stylelint": "^14.1.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-standard": "^24.0.0",
+    "stylelint-order": "^5.0.0",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.4",
+    "@mui/material": "^5.2.4",
+    "@mui/styles": "^5.2.3",
+    "classnames": "^2.3.1",
+    "dayjs": "^1.10.7",
+    "lodash": "^4.17.21",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^6.2.1",
+    "react-router-dom": "^6.1.1",
+    "react-scripts": "5.0.0",
+    "redux": "^4.1.2",
+    "web-vitals": "^2.1.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.!(*snap)": [
+      "prettier --write"
+    ],
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0"
+    ],
+    "src/**/*.{css,scss}": [
+      "stylelint"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!**/*.d.ts",
+      "!**/node_modules/**",
+      "!src/index.tsx",
+      "!src/reportWebVitals.ts",
+      "!src/entities/*.{js,ts,jsx,tsx}",
+      "!src/**/*.mock.{js,jsx,ts,tsx}",
+      "!src/constants/*.{js,jsx,ts,tsx}",
+      "!src/__mocks__/*.{js,jsx,ts,tsx}",
+      "!src/test-utilities/*.{js,jsx,ts,tsx}",
+      "!src/mui/*.{js,jsx,ts,tsx}",
+      "!src/services/rest/rest.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  }
+}
