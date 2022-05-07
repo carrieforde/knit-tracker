@@ -1,41 +1,18 @@
 import { Button } from "@mui/material";
 import { Input } from "components";
 import { Form } from "components/Form/Form";
-import { kebabCase } from "lodash";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useNavigate } from "react-router";
-import { Counter, Project } from "types";
 import { CounterFields } from "../CounterFields/CounterFields";
-
-export type AddNewProjectValues = Omit<Counter, "id"> & {
-  name: string;
-};
-
-const defaultNewProjectValues: AddNewProjectValues = {
-  name: "",
-  maxRowCount: 0,
-  currentRowCount: 0,
-  maxRepeatCount: 0,
-  currentRepeatCount: 0,
-  rowRepeatLinked: false,
-};
-
-function saveProjectToLocalStorage(
-  project: AddNewProjectValues & { slug: string }
-) {
-  // Get existing projects
-  const projects: Project[] = localStorage.getItem("projects")
-    ? JSON.parse(localStorage.getItem("projects") ?? "")
-    : [];
-
-  const updatedProjects = JSON.stringify([...projects, project]);
-
-  return localStorage.setItem("projects", updatedProjects);
-}
+import {
+  AddProjectFormValues,
+  defaultAddProjectValues,
+  getMappedProjectValues,
+} from "./AddProjectForm.helpers";
 
 export const AddProjectForm: React.FC = () => {
-  const [formValues, setFormValues] = useState<AddNewProjectValues>(
-    defaultNewProjectValues
+  const [formValues, setFormValues] = useState<AddProjectFormValues>(
+    defaultAddProjectValues
   );
   const navigate = useNavigate();
 
@@ -49,10 +26,10 @@ export const AddProjectForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    saveProjectToLocalStorage({
-      ...formValues,
-      slug: kebabCase(formValues.name),
-    });
+
+    // eslint-disable-next-line no-console
+    console.info(getMappedProjectValues(formValues));
+
     navigate("/guest/projects");
   };
 

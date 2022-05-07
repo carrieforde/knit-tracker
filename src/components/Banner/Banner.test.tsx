@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { Banner, BannerProps, Variant } from "./Banner";
+import { Variant } from "types";
+import { Banner, BannerProps } from "./Banner";
 
 function renderBanner(props: Pick<BannerProps, "variant">) {
   return render(<Banner {...props}>Banner content</Banner>);

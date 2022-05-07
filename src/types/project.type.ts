@@ -1,6 +1,7 @@
-import { Counter } from "./counter.type";
+import { Counter, CounterType } from "./counter.type";
 
-export interface Project extends Counter {
+export interface Project {
   slug: string;
   name: string;
+  counters: [Counter<CounterType.ROW>, Counter<CounterType.REPEAT>, boolean];
 }
