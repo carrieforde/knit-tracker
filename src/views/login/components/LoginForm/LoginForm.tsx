@@ -7,6 +7,8 @@ import React, {
   useCallback,
   useState,
 } from "react";
+import { Link } from "react-router-dom";
+import { setGuestUser } from "store/auth/auth";
 import { FormContainer } from "./LoginForm.styles";
 
 interface LoginFormValues {
@@ -47,6 +49,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     onCreateAccountAttempt(true);
   };
 
+  const handleGuestClick = () => {
+    setGuestUser();
+  };
+
   return (
     <FormContainer component="form" onSubmit={handleSubmit}>
       <Typography component="h1" variant="h6" mb={1} textAlign="center">
@@ -70,11 +76,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         Create Account
       </Button>
 
-      <Button>Continue as Guest</Button>
+      <Button component={Link} to="guest/projects" onClick={handleGuestClick}>
+        Continue as Guest
+      </Button>
 
       <Typography variant="caption" textAlign="center">
-        To continue as a guest, your data will be stored in the browser, and
-        will not be available across devices.
+        Continuing as a guest stores your data in the browser, and it will not
+        be available across devices.
       </Typography>
     </FormContainer>
   );
