@@ -1,11 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { App } from "components";
-import reportWebVitals from "./reportWebVitals";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
+import { App } from "components";
 import { theme } from "mui/theme";
+import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
+import { openDatabase } from "services/indexedDb/indexedDb";
+import reportWebVitals from "./reportWebVitals";
+
+(function () {
+  openDatabase();
+})();
 
 ReactDOM.render(
   <React.StrictMode>

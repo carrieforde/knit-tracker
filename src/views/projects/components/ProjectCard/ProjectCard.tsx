@@ -14,10 +14,7 @@ import { Project } from "types";
 export const ProjectCard: React.FC<Project> = ({
   name,
   slug,
-  currentRowCount = 0,
-  maxRowCount,
-  currentRepeatCount,
-  maxRepeatCount,
+  counters: [rowCounter, repeatCounter, isLinked],
 }) => (
   <Card sx={{ maxWidth: "100%", width: "350px" }}>
     <CardContent>
@@ -27,16 +24,16 @@ export const ProjectCard: React.FC<Project> = ({
 
       <Typography>Current Progress</Typography>
       <Typography variant="body2">
-        {currentRowCount} of {maxRowCount} rows
+        {rowCounter.currentCount} of {rowCounter.maxCount} rows
       </Typography>
-      {maxRepeatCount > 0 ? (
+      {repeatCounter.maxCount > 0 ? (
         <Typography variant="body2">
-          {currentRepeatCount} of {maxRepeatCount} repeats
+          {repeatCounter.currentCount} of {repeatCounter.maxCount} repeats
         </Typography>
       ) : null}
     </CardContent>
     <CardActions>
-      <Button component={Link} to={slug}>
+      <Button component={Link} to={`/projects/${slug}`}>
         View Counters
       </Button>
       <IconButton>

@@ -1,4 +1,4 @@
 export * from "./add-project/AddProject";
-export * from "./login/LoginView";
+export * from "./login/Login";
 export * from "./projects/Projects";
 export * from "./project/Project";

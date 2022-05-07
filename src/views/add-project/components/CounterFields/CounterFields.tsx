@@ -1,11 +1,10 @@
 import { FormControlLabel, Switch } from "@mui/material";
 import { Input } from "components";
 import React, { ChangeEvent } from "react";
-import { Counter } from "types";
-import { AddNewProjectValues } from "../AddProjectForm/AddProjectForm";
+import { AddProjectFormValues } from "../AddProjectForm/AddProjectForm.helpers";
 
 export type CounterFieldsProps = {
-  values: AddNewProjectValues;
+  values: AddProjectFormValues;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -45,11 +44,7 @@ export const CounterFields: React.FC<CounterFieldsProps> = ({
     <FormControlLabel
       label="Link row & repeat?"
       control={
-        <Switch
-          name="rowRepeatLinked"
-          value={values.rowRepeatLinked}
-          onChange={onChange}
-        />
+        <Switch name="isLinked" value={values.isLinked} onChange={onChange} />
       }
     />
   </>

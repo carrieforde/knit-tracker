@@ -3,12 +3,8 @@ import { Fab } from "@mui/material";
 import { Layout } from "components/Layout/Layout";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Project } from "types";
+import { getProjectsFromLocalStorage } from "services/localStorage/localStorage";
 import { ProjectCard } from "./components/ProjectCard/ProjectCard";
-
-export function getProjectsFromLocalStorage(): Project[] {
-  return JSON.parse(localStorage.getItem("projects") ?? "");
-}
 
 export const Projects = () => {
   const projects = getProjectsFromLocalStorage();
@@ -16,9 +12,6 @@ export const Projects = () => {
   if (!projects.length) {
     return null;
   }
-
-  // eslint-disable-next-line no-console
-  console.log(projects);
 
   return (
     <Layout grid>

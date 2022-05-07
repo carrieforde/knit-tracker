@@ -3,6 +3,8 @@ import { Input } from "components";
 import { Form } from "components/Form/Form";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useNavigate } from "react-router";
+import { addProject } from "services/indexedDb/indexedDb";
+import { saveProjectToLocalStorage } from "services/localStorage/localStorage";
 import { CounterFields } from "../CounterFields/CounterFields";
 import {
   AddProjectFormValues,
@@ -27,9 +29,10 @@ export const AddProjectForm: React.FC = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    // eslint-disable-next-line no-console
-    console.info(getMappedProjectValues(formValues));
+    const mapped = getMappedProjectValues(formValues);
 
+    saveProjectToLocalStorage(mapped);
+    addProject(mapped);
     navigate("/guest/projects");
   };
 
