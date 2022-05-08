@@ -8,7 +8,6 @@ import React, {
   useState,
 } from "react";
 import { Link } from "react-router-dom";
-import { setGuestUser } from "store/auth/auth";
 import { FormContainer } from "./LoginForm.styles";
 
 interface LoginFormValues {
@@ -50,7 +49,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   const handleGuestClick = () => {
-    setGuestUser();
+    // console.log('guest')
   };
 
   return (

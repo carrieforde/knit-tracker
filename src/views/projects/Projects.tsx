@@ -1,15 +1,15 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Fab } from "@mui/material";
 import { Layout } from "components/Layout/Layout";
+import { useProjects } from "hooks/useProjects/useProjects";
 import React from "react";
 import { Link } from "react-router-dom";
-import { getProjectsFromLocalStorage } from "services/localStorage/localStorage";
 import { ProjectCard } from "./components/ProjectCard/ProjectCard";
 
 export const Projects = () => {
-  const projects = getProjectsFromLocalStorage();
+  const { projects } = useProjects();
 
-  if (!projects.length) {
+  if (!projects || !projects.length) {
     return null;
   }
 

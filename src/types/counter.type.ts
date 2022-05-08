@@ -3,7 +3,7 @@ export enum CounterType {
   REPEAT = "repeat",
 }
 
-export interface Counter<T extends CounterType> {
+export interface ICounter<T extends CounterType> {
   type: T;
   maxCount: number;
   currentCount: number;

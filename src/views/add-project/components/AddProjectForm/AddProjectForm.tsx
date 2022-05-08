@@ -3,8 +3,7 @@ import { Input } from "components";
 import { Form } from "components/Form/Form";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useNavigate } from "react-router";
-import { addProject } from "services/indexedDb/indexedDb";
-import { saveProjectToLocalStorage } from "services/localStorage/localStorage";
+import { database } from "services/indexedDb/indexedDb";
 import { CounterFields } from "../CounterFields/CounterFields";
 import {
   AddProjectFormValues,
@@ -20,7 +19,7 @@ export const AddProjectForm: React.FC = () => {
 
   const handleChange = useCallback(
     ({ target: { name, checked, value } }: ChangeEvent<HTMLInputElement>) => {
-      const newValue = name === "rowRepeatLinked" ? checked : value;
+      const newValue = name === "isLinked" ? checked : value;
       setFormValues((s) => ({ ...s, [name]: newValue }));
     },
     []
@@ -31,9 +30,8 @@ export const AddProjectForm: React.FC = () => {
 
     const mapped = getMappedProjectValues(formValues);
 
-    saveProjectToLocalStorage(mapped);
-    addProject(mapped);
-    navigate("/guest/projects");
+    database.addProject(mapped);
+    navigate("/projects");
   };
 
   return (

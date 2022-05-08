@@ -1,8 +1,8 @@
 import { kebabCase, toNumber } from "lodash";
-import { CounterType, Project } from "types";
+import { CounterType, IProject } from "types";
 
 export interface AddProjectFormValues
-  extends Omit<Project, "slug" | "counters"> {
+  extends Omit<IProject, "slug" | "counters"> {
   maxRowCount: number | string;
   currentRowCount: number | string;
   maxRepeatCount: number | string;
@@ -19,7 +19,7 @@ export const defaultAddProjectValues: AddProjectFormValues = {
   isLinked: false,
 };
 
-export function getMappedProjectValues(values: AddProjectFormValues): Project {
+export function getMappedProjectValues(values: AddProjectFormValues): IProject {
   return {
     name: values.name,
     slug: kebabCase(values.name),

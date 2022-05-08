@@ -9,9 +9,9 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Project } from "types";
+import { IProject } from "types";
 
-export const ProjectCard: React.FC<Project> = ({
+export const ProjectCard: React.FC<IProject> = ({
   name,
   slug,
   counters: [rowCounter, repeatCounter, isLinked],

@@ -2,6 +2,6 @@
   "extends": ["react-app", "react-app/jest"],
   "rules": {
     "import/named": 0,
-    "no-console": 2
+    "no-console": ["error", { "allow": ["warn", "error"] }]
   }
 }

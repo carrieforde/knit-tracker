@@ -5,12 +5,7 @@ import { theme } from "mui/theme";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import { openDatabase } from "services/indexedDb/indexedDb";
 import reportWebVitals from "./reportWebVitals";
-
-(function () {
-  openDatabase();
-})();
 
 ReactDOM.render(
   <React.StrictMode>

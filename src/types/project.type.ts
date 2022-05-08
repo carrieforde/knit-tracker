@@ -1,7 +1,7 @@
-import { Counter, CounterType } from "./counter.type";
+import { ICounter, CounterType } from "./counter.type";
 
-export interface Project {
+export interface IProject {
   slug: string;
   name: string;
-  counters: [Counter<CounterType.ROW>, Counter<CounterType.REPEAT>, boolean];
+  counters: [ICounter<CounterType.ROW>, ICounter<CounterType.REPEAT>, boolean];
 }
