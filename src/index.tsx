@@ -1,11 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { App } from "components";
-import reportWebVitals from "./reportWebVitals";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
+import { App } from "components";
 import { theme } from "mui/theme";
+import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
+import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>

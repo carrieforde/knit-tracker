@@ -2,9 +2,9 @@ import { Typography } from "@mui/material";
 import { Banner } from "components";
 import { useState } from "react";
 import { LoginForm } from "./components";
-import { LoginLayout } from "./LoginView.styles";
+import { LoginLayout } from "./Login.styles";
 
-export const LoginView = () => {
+export const Login = () => {
   const [showBanner, setShowBanner] = useState<boolean>(false);
 
   return (
