@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
-import { database } from "services/indexedDb/indexedDb";
+import { database } from "services";
 import { AddProject, Project, Projects } from "views";
 
 export const App = () => {

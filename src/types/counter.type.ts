@@ -9,3 +9,9 @@ export interface ICounter<T extends CounterType> {
   currentCount: number;
   isLinked?: boolean;
 }
+
+export type ICounters = [
+  ICounter<CounterType.ROW>,
+  ICounter<CounterType.REPEAT>,
+  boolean
+];

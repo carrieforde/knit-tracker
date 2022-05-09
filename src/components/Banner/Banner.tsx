@@ -17,10 +17,6 @@ export const Banner: React.FC<BannerProps> = ({
   variant,
   ...props
 }) => {
-  if (!variant) {
-    return null;
-  }
-
   let icon = null;
 
   switch (variant) {

@@ -1,4 +1,4 @@
-import { database } from "services/indexedDb/indexedDb";
+import { database } from "services";
 import { IProject } from "types";
 
 export const useCounters = () => {

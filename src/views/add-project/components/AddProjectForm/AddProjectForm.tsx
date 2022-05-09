@@ -3,7 +3,7 @@ import { Input } from "components";
 import { Form } from "components/Form/Form";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useNavigate } from "react-router";
-import { database } from "services/indexedDb/indexedDb";
+import { database } from "services";
 import { CounterFields } from "../CounterFields/CounterFields";
 import {
   AddProjectFormValues,

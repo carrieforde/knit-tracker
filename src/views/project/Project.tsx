@@ -4,13 +4,13 @@ import { useProjects } from "hooks/useProjects/useProjects";
 import { capitalize } from "lodash";
 import React, { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
-import { CounterType } from "types";
 import {
   decreaseRepeat,
   decreaseRow,
   increaseRepeat,
   increaseRow,
-} from "utilities/counters/counters";
+} from "services";
+import { CounterType, IProjectStatus } from "types";
 import { Counter } from "./components";
 
 type CounterHandler =
@@ -86,12 +86,17 @@ export const Project = () => {
   const {
     name,
     counters: [rowCounter, repeatCounter],
+    timestamps: { completed },
+    status,
   } = project;
+
+  const isDisabled = status === IProjectStatus.complete || !!completed;
 
   return (
     <Layout>
       <Typography>{name}</Typography>
       <Counter
+        disabled={isDisabled}
         title={capitalize(CounterType.ROW)}
         value={rowCounter.currentCount}
         onDecrease={handleDecreaseRow}
@@ -99,6 +104,7 @@ export const Project = () => {
       />
 
       <Counter
+        disabled={isDisabled}
         title="Repeats"
         value={repeatCounter.currentCount}
         onDecrease={handleDecreaseRepeat}

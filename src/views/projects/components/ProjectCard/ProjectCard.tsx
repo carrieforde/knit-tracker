@@ -1,5 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -7,6 +8,8 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { Progress, StatusChip } from "components";
+import dayjs from "dayjs";
 import React from "react";
 import { Link } from "react-router-dom";
 import { IProject } from "types";
@@ -14,21 +17,37 @@ import { IProject } from "types";
 export const ProjectCard: React.FC<IProject> = ({
   name,
   slug,
-  counters: [rowCounter, repeatCounter, isLinked],
+  timestamps,
+  status,
+  progress,
 }) => (
   <Card sx={{ maxWidth: "100%", width: "350px" }}>
     <CardContent>
-      <Typography component="h2" variant="h6">
-        {name}
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+        mb={2}
+      >
+        <Typography component="h2" variant="h6" lineHeight={1.2} mr={1}>
+          {name}
+        </Typography>
+        <StatusChip status={status} />
+      </Box>
 
-      <Typography>Current Progress</Typography>
-      <Typography variant="body2">
-        {rowCounter.currentCount} of {rowCounter.maxCount} rows
-      </Typography>
-      {repeatCounter.maxCount > 0 ? (
-        <Typography variant="body2">
-          {repeatCounter.currentCount} of {repeatCounter.maxCount} repeats
+      <Progress progress={progress} />
+
+      {timestamps?.started ? (
+        <Typography>
+          Started: {dayjs(timestamps.started).format("MM/DD/YYYY")}
+        </Typography>
+      ) : null}
+
+      {timestamps?.completed ? (
+        <Typography>
+          Completed: {dayjs(timestamps.completed).format("MM/DD/YYYY")}
         </Typography>
       ) : null}
     </CardContent>

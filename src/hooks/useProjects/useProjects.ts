@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { database } from "services/indexedDb/indexedDb";
+import { database } from "services";
 import { IProject } from "types";
 
 export const useProjects = () => {

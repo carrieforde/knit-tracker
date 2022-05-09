@@ -1,9 +1,13 @@
 import { CounterType } from "types";
-import { getMappedProjectValues } from "./AddProjectForm.helpers";
+import {
+  defaultAddProjectValues,
+  getMappedProjectValues,
+} from "./AddProjectForm.helpers";
 
 describe("mapProjectValues", () => {
   it("should map values entered in the form to a DB friendly format", () => {
     const mapped = getMappedProjectValues({
+      ...defaultAddProjectValues,
       name: "My hat",
       maxRowCount: "30",
       currentRowCount: 5,
