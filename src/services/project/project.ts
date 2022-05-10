@@ -1,5 +1,88 @@
 import { isNull } from "lodash";
-import { ICounters, IProject, IProjectStatus, IProjectTimestamps } from "types";
+import {
+  CounterType,
+  ICounters,
+  IProject,
+  IProjectStatus,
+  IProjectTimestamps,
+} from "types";
+
+export enum UpdateType {
+  incrementRow = "incrementRow",
+  decrementRow = "decrementRow",
+  incrementRepeat = "incrementRepeat",
+  decrementRepeat = "decrementRepeat",
+}
+
+export function updateProject(project: IProject, type: UpdateType): IProject {
+  let counters: ICounters = [...project.counters];
+  let isComplete = false;
+
+  switch (type) {
+    case UpdateType.incrementRow:
+      [counters, isComplete] = increment(counters, CounterType.ROW);
+      break;
+
+    case UpdateType.decrementRow:
+      counters = decrement(counters, CounterType.ROW);
+      break;
+
+    case UpdateType.incrementRepeat:
+      [counters, isComplete] = increment(counters, CounterType.REPEAT);
+      break;
+
+    case UpdateType.decrementRepeat:
+      counters = decrement(counters, CounterType.REPEAT);
+      break;
+
+    default:
+      break;
+  }
+
+  return {
+    ...project,
+    counters,
+    timestamps: updateTimestamps(project.timestamps, isComplete),
+    progress: calculateProgress(counters),
+  };
+}
+
+export function increment(
+  counters: ICounters,
+  type: CounterType
+): [counters: ICounters, isComplete: boolean] {
+  const [row, repeat, isLinked] = counters;
+  const { currentCount, maxCount } = type === CounterType.ROW ? row : repeat;
+  const increaseValue = currentCount + 1;
+  const newCount = increaseValue < maxCount ? increaseValue : 0;
+
+  if (type === CounterType.ROW) {
+    const [_counter, isComplete] = increment(counters, CounterType.REPEAT);
+    const [_repeat, _isComplete] =
+      isLinked && increaseValue === maxCount
+        ? [_counter[1], isComplete]
+        : [repeat, increaseValue === maxCount];
+
+    return [
+      [{ ...row, currentCount: newCount }, _repeat, isLinked],
+      _isComplete,
+    ];
+  }
+
+  return [
+    [row, { ...repeat, currentCount: newCount }, isLinked],
+    increaseValue === maxCount,
+  ];
+}
+
+export function decrement(counters: ICounters, type: CounterType): ICounters {
+  const [row, repeat, isLinked] = counters;
+  const { currentCount } = type === CounterType.ROW ? row : repeat;
+  const decreaseValue = currentCount - 1;
+  const newCount = decreaseValue > 0 ? decreaseValue : 0;
+
+  return [row, { ...repeat, currentCount: newCount }, isLinked];
+}
 
 export function increaseRow(project: IProject): IProject {
   const [row, repeat, isLinked] = project.counters;

@@ -24,11 +24,14 @@ export class Database {
 
     request.onerror = () => console.error("Data cannot be stored at this time");
 
-    request.onupgradeneeded = () => {
-      const objectStore = this.db?.createObjectStore(DB_STORE_NAME, {
-        keyPath: "slug",
-        autoIncrement: true,
-      });
+    request.onupgradeneeded = (evt) => {
+      const objectStore = (evt.target as any).result.createObjectStore(
+        DB_STORE_NAME,
+        {
+          keyPath: "slug",
+          autoIncrement: true,
+        }
+      );
 
       if (objectStore) {
         objectStore.createIndex("slug", "slug", { unique: true });
