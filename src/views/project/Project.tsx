@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { Layout } from "components/Layout/Layout";
-import { useProjects } from "hooks/useProjects/useProjects";
+import { useProjects } from "hooks";
 import { capitalize } from "lodash";
 import React, { useCallback, useEffect } from "react";
 import { useParams } from "react-router";

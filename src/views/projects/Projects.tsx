@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Fab } from "@mui/material";
 import { Layout } from "components/Layout/Layout";
-import { useProjects } from "hooks/useProjects/useProjects";
+import { useProjects } from "hooks";
 import React from "react";
 import { Link } from "react-router-dom";
 import { ProjectCard } from "./components/ProjectCard/ProjectCard";
