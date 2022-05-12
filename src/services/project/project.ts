@@ -14,7 +14,7 @@ export enum UpdateType {
   decrementRepeat = "decrementRepeat",
 }
 
-export function updateProject(project: IProject, type: UpdateType): IProject {
+export function updateProject(project: IProject, type?: UpdateType): IProject {
   let counters: ICounters = [...project.counters];
   let isComplete = false;
 
@@ -44,6 +44,7 @@ export function updateProject(project: IProject, type: UpdateType): IProject {
     counters,
     timestamps: updateTimestamps(project.timestamps, isComplete),
     progress: calculateProgress(counters),
+    status: calculateStatus(counters),
   };
 }
 
@@ -81,86 +82,11 @@ export function decrement(counters: ICounters, type: CounterType): ICounters {
   const decreaseValue = currentCount - 1;
   const newCount = decreaseValue > 0 ? decreaseValue : 0;
 
-  return [row, { ...repeat, currentCount: newCount }, isLinked];
-}
-
-export function increaseRow(project: IProject): IProject {
-  const [row, repeat, isLinked] = project.counters;
-  const { currentCount, maxCount } = row;
-  const increaseValue = currentCount + 1;
-  const newCount = increaseValue < maxCount ? increaseValue : 0;
-
-  if (isLinked && increaseValue === maxCount) {
-    const updatedProject = increaseRepeat(project);
-
-    return {
-      ...updatedProject,
-      counters: [
-        { ...row, currentCount: newCount },
-        updatedProject.counters[1],
-        isLinked,
-      ],
-    };
+  if (type === CounterType.ROW) {
+    return [{ ...row, currentCount: newCount }, repeat, isLinked];
   }
 
-  return {
-    ...project,
-    timestamps: updateTimestamps(
-      project.timestamps,
-      increaseValue === row.maxCount
-    ),
-    status:
-      increaseValue === row.maxCount
-        ? IProjectStatus.complete
-        : IProjectStatus.inProgress,
-    progress: (increaseValue / row.maxCount) * 100,
-    counters: [{ ...row, currentCount: newCount }, repeat, isLinked],
-  };
-}
-
-export function decreaseRow(project: IProject): IProject {
-  const [row, repeat, isLinked] = project.counters;
-  const { currentCount } = row;
-  const decreaseValue = currentCount - 1;
-  const newCount = decreaseValue > 0 ? decreaseValue : 0;
-
-  return {
-    ...project,
-    counters: [{ ...row, currentCount: newCount }, repeat, isLinked],
-  };
-}
-
-export function increaseRepeat(project: IProject): IProject {
-  const [row, repeat, isLinked] = project.counters;
-  const { currentCount, maxCount } = repeat;
-  const increaseValue = currentCount + 1;
-  const newCount = increaseValue < maxCount ? increaseValue : 0;
-
-  return {
-    ...project,
-    timestamps: updateTimestamps(
-      project.timestamps,
-      increaseValue === maxCount
-    ),
-    status:
-      increaseValue === maxCount
-        ? IProjectStatus.complete
-        : IProjectStatus.inProgress,
-    progress: (increaseValue / maxCount) * 100,
-    counters: [row, { ...repeat, currentCount: newCount }, isLinked],
-  };
-}
-
-export function decreaseRepeat(project: IProject): IProject {
-  const [row, repeat, isLinked] = project.counters;
-  const { currentCount } = repeat;
-  const decreaseValue = currentCount - 1;
-  const newCount = decreaseValue > 0 ? decreaseValue : 0;
-
-  return {
-    ...project,
-    counters: [row, { ...repeat, currentCount: newCount }, isLinked],
-  };
+  return [row, { ...repeat, currentCount: newCount }, isLinked];
 }
 
 export function calculateProgress(counters: ICounters): number {
@@ -193,4 +119,24 @@ export function updateTimestamps(
   }
 
   return { ...updatedTimestamps, updated: new Date().toISOString() };
+}
+
+export function calculateStatus([row, repeat]: ICounters): IProjectStatus {
+  if (repeat.maxCount > 0 && repeat.currentCount > 0) {
+    if (repeat.currentCount === repeat.maxCount) {
+      return IProjectStatus.complete;
+    }
+
+    return IProjectStatus.inProgress;
+  }
+
+  if (row.currentCount > 0) {
+    if (row.currentCount === row.maxCount) {
+      return IProjectStatus.complete;
+    }
+
+    return IProjectStatus.inProgress;
+  }
+
+  return IProjectStatus.notStarted;
 }

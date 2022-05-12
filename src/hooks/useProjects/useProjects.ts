@@ -16,7 +16,7 @@ export const useProjects = () => {
     []
   );
 
-  const updateProject = useCallback(
+  const patchProject = useCallback(
     (project: IProject) => {
       database.updateProject(project);
       getProject(project.slug);
@@ -32,5 +32,11 @@ export const useProjects = () => {
     }
   }, [getProjects, projects]);
 
-  return { projects, getProject, project, resetProject, updateProject };
+  return {
+    projects,
+    getProject,
+    project,
+    resetProject,
+    patchProject,
+  };
 };
