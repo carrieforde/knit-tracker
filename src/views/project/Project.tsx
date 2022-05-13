@@ -4,72 +4,44 @@ import { useProjects } from "hooks";
 import { capitalize } from "lodash";
 import React, { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
-import {
-  decreaseRepeat,
-  decreaseRow,
-  increaseRepeat,
-  increaseRow,
-} from "services";
+import { updateProject, UpdateType } from "services";
 import { CounterType, IProjectStatus } from "types";
 import { Counter } from "./components";
 
-type CounterHandler =
-  | "increaseRow"
-  | "decreaseRow"
-  | "increaseRepeat"
-  | "decreaseRepeat";
-
 export const Project = () => {
   const { projectId } = useParams();
-  const { project, getProject, updateProject } = useProjects();
+  const { project, getProject, patchProject } = useProjects();
 
   const handleCounters = useCallback(
-    (handlerType: CounterHandler) => {
+    (updateType: UpdateType) => {
       if (!project || !projectId) {
         return null;
       }
 
-      let value = project;
+      const value = updateProject(project, updateType);
 
-      switch (handlerType) {
-        case "increaseRow":
-          value = increaseRow(project);
-          break;
-        case "decreaseRow":
-          value = decreaseRow(project);
-          break;
-        case "increaseRepeat":
-          value = increaseRepeat(project);
-          break;
-        case "decreaseRepeat":
-          value = decreaseRepeat(project);
-          break;
-        default:
-          break;
-      }
-
-      updateProject(value);
+      patchProject(value);
     },
-    [project, projectId, updateProject]
+    [project, projectId, patchProject]
   );
 
   const handleIncreaseRow = useCallback(
-    () => handleCounters("increaseRow"),
+    () => handleCounters(UpdateType.incrementRow),
     [handleCounters]
   );
 
   const handleDecreaseRow = useCallback(
-    () => handleCounters("decreaseRow"),
+    () => handleCounters(UpdateType.decrementRow),
     [handleCounters]
   );
 
   const handleIncreaseRepeat = useCallback(
-    () => handleCounters("increaseRepeat"),
+    () => handleCounters(UpdateType.incrementRepeat),
     [handleCounters]
   );
 
   const handleDecreaseRepeat = useCallback(
-    () => handleCounters("decreaseRepeat"),
+    () => handleCounters(UpdateType.decrementRepeat),
     [handleCounters]
   );
 
