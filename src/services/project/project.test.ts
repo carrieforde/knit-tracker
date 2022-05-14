@@ -1,5 +1,6 @@
 import { CounterType, ICounters, IProject, IProjectStatus } from "types";
 import {
+  addProject,
   calculateProgress,
   calculateStatus,
   decrement,
@@ -10,6 +11,31 @@ import {
 } from "./project";
 
 describe("project service", () => {
+  describe("addProject", () => {
+    it("should return a project with initialized values", () => {
+      expect(
+        addProject({
+          name: "my project",
+          counters: [
+            { type: CounterType.ROW, currentCount: 0, maxCount: 5 },
+            { type: CounterType.REPEAT, currentCount: 0, maxCount: 5 },
+            false,
+          ],
+        })
+      ).toMatchObject({
+        name: "my project",
+        slug: "my-project",
+        timestamps: {
+          started: null,
+          updated: null,
+          completed: null,
+        },
+        progress: 0,
+        status: IProjectStatus.notStarted,
+      });
+    });
+  });
+
   describe("updateProject", () => {
     const originalDate = new Date(2022, 3, 30).toISOString();
     const date = new Date(2022, 4, 1).toISOString();
@@ -24,6 +50,7 @@ describe("project service", () => {
       ],
       progress: 60,
       timestamps: {
+        added: originalDate,
         started: originalDate,
         updated: originalDate,
         completed: null,
@@ -279,21 +306,26 @@ describe("project service", () => {
     });
 
     it("should set the started & updated time but leave the completed time", () => {
-      expect(
-        updateTimestamps(
-          { started: null, completed: null, updated: null },
-          false
-        )
-      ).toMatchObject({ started: date, completed: null, updated: date });
+      expect(updateTimestamps({ isStarted: true })).toMatchObject({
+        started: date,
+        completed: null,
+        updated: date,
+      });
     });
 
     it("should update the completed and update time, but leave the started time", () => {
       const started = new Date(2022, 3, 30).toISOString();
       expect(
-        updateTimestamps(
-          { started: started, completed: null, updated: started },
-          true
-        )
+        updateTimestamps({
+          timestamps: {
+            added: started,
+            started,
+            completed: null,
+            updated: started,
+          },
+          isCompleted: true,
+          isStarted: true,
+        })
       ).toMatchObject({
         started,
         completed: date,
@@ -304,10 +336,16 @@ describe("project service", () => {
     it("should update the updated time, but leave started & completed", () => {
       const started = new Date(2022, 3, 30).toISOString();
       expect(
-        updateTimestamps(
-          { started: started, completed: null, updated: started },
-          false
-        )
+        updateTimestamps({
+          timestamps: {
+            added: started,
+            started: started,
+            completed: null,
+            updated: started,
+          },
+          isCompleted: false,
+          isStarted: true,
+        })
       ).toMatchObject({
         started,
         completed: null,

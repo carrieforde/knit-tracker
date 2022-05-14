@@ -30,7 +30,7 @@ export const AddProjectForm: React.FC = () => {
 
     const mapped = getMappedProjectValues(formValues);
 
-    database.addProject(mapped);
+    database.postProject(mapped);
     navigate("/projects");
   };
 

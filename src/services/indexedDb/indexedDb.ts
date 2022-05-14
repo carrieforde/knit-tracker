@@ -69,7 +69,7 @@ export class Database {
     }
   }
 
-  addProject(project: IProject) {
+  postProject(project: IProject) {
     const objectStore = this.getObjectStore("readwrite");
 
     if (objectStore) {
