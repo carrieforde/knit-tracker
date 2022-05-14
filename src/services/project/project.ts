@@ -1,4 +1,4 @@
-import { isNull } from "lodash";
+import { kebabCase } from "lodash";
 import {
   CounterType,
   ICounters,
@@ -6,6 +6,18 @@ import {
   IProjectStatus,
   IProjectTimestamps,
 } from "types";
+
+export function addProject(
+  project: Pick<IProject, "name" | "counters">
+): IProject {
+  return {
+    ...project,
+    slug: kebabCase(project.name),
+    timestamps: updateTimestamps({ isAdded: true }),
+    progress: calculateProgress(project.counters),
+    status: calculateStatus(project.counters),
+  };
+}
 
 export enum UpdateType {
   incrementRow = "incrementRow",
@@ -16,11 +28,11 @@ export enum UpdateType {
 
 export function updateProject(project: IProject, type?: UpdateType): IProject {
   let counters: ICounters = [...project.counters];
-  let isComplete = false;
+  let isCompleted = false;
 
   switch (type) {
     case UpdateType.incrementRow:
-      [counters, isComplete] = increment(counters, CounterType.ROW);
+      [counters, isCompleted] = increment(counters, CounterType.ROW);
       break;
 
     case UpdateType.decrementRow:
@@ -28,7 +40,7 @@ export function updateProject(project: IProject, type?: UpdateType): IProject {
       break;
 
     case UpdateType.incrementRepeat:
-      [counters, isComplete] = increment(counters, CounterType.REPEAT);
+      [counters, isCompleted] = increment(counters, CounterType.REPEAT);
       break;
 
     case UpdateType.decrementRepeat:
@@ -39,10 +51,17 @@ export function updateProject(project: IProject, type?: UpdateType): IProject {
       break;
   }
 
+  const [row, repeat] = counters;
+  const isStarted = row.currentCount > 0 || repeat.currentCount > 0;
+
   return {
     ...project,
     counters,
-    timestamps: updateTimestamps(project.timestamps, isComplete),
+    timestamps: updateTimestamps({
+      timestamps: project.timestamps,
+      isCompleted,
+      isStarted,
+    }),
     progress: calculateProgress(counters),
     status: calculateStatus(counters),
   };
@@ -103,22 +122,54 @@ export function calculateProgress(counters: ICounters): number {
   return 0;
 }
 
-export function updateTimestamps(
-  timestamps: IProjectTimestamps,
-  isComplete: boolean
-): IProjectTimestamps {
-  const updatedTimestamps = { ...timestamps };
-  const { started, completed } = timestamps;
+type UpdateTimestampArgs = {
+  timestamps: IProjectTimestamps;
+  isAdded: boolean;
+  isStarted: boolean;
+  isCompleted: boolean;
+};
 
-  if (!started) {
+const defaultUpdateTimestampArgs: UpdateTimestampArgs = {
+  timestamps: {
+    added: null,
+    started: null,
+    updated: null,
+    completed: null,
+  },
+  isAdded: false,
+  isStarted: false,
+  isCompleted: false,
+};
+
+export function updateTimestamps(
+  args?: Partial<UpdateTimestampArgs>
+): IProjectTimestamps {
+  const { timestamps, isAdded, isStarted, isCompleted } = {
+    ...defaultUpdateTimestampArgs,
+    ...args,
+  };
+  const updatedTimestamps = {
+    ...timestamps,
+  };
+  const { added, started, completed } = timestamps;
+
+  if (!added && isAdded) {
+    updatedTimestamps.added = new Date().toISOString();
+  }
+
+  if (!started && isStarted) {
     updatedTimestamps.started = new Date().toISOString();
   }
 
-  if (isComplete && isNull(completed)) {
+  if (!completed && isCompleted) {
     updatedTimestamps.completed = new Date().toISOString();
   }
 
-  return { ...updatedTimestamps, updated: new Date().toISOString() };
+  if (isStarted || isCompleted) {
+    updatedTimestamps.updated = new Date().toISOString();
+  }
+
+  return updatedTimestamps;
 }
 
 export function calculateStatus([row, repeat]: ICounters): IProjectStatus {

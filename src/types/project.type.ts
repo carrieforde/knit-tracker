@@ -16,6 +16,7 @@ export enum IProjectStatus {
 }
 
 export interface IProjectTimestamps {
+  added: string | null;
   started: string | null;
   completed: string | null;
   updated: string | null;
