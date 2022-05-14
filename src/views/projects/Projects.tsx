@@ -11,7 +11,7 @@ export const Projects = () => {
   }
 
   return (
-    <Layout grid>
+    <Layout data-testid="projects" grid>
       {projects.map((project) => (
         <ProjectCard key={project.slug} {...project} />
       ))}
