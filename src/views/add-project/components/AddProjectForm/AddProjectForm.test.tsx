@@ -2,11 +2,12 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { CounterType, IProject, IProjectStatus } from "types";
 import { AddProjectForm } from "./AddProjectForm";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { database } from "services";
 import userEvent from "@testing-library/user-event";
 
-jest.mock("react-router", () => ({
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
   useNavigate: jest.fn(),
 }));
 
@@ -20,11 +21,13 @@ jest.mock("services", () => ({
 const mockedUseNavigate = jest.mocked(useNavigate);
 const mockedDatabase = jest.mocked(database);
 
+const navigate = jest.fn();
+
 describe("AddProjectForm", () => {
   const date = new Date(2022, 4, 1).toISOString();
 
   beforeEach(() => {
-    mockedUseNavigate.mockReturnValue(jest.fn());
+    mockedUseNavigate.mockReturnValue(navigate);
   });
 
   beforeAll(() => {
@@ -75,6 +78,6 @@ describe("AddProjectForm", () => {
     userEvent.click(screen.getByRole("button", { name: "Save" }));
 
     expect(mockedDatabase.postProject).toHaveBeenCalledWith(payload);
-    // expect(mockedUseNavigate).toHaveBeenCalledWith("/projects");
+    expect(navigate).toHaveBeenCalledWith("/projects");
   });
 });

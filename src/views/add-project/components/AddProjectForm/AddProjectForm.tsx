@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { Input } from "components";
 import { Form } from "components/Form/Form";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { database } from "services";
 import { CounterFields } from "../CounterFields/CounterFields";
 import {
