@@ -1,3 +1,4 @@
+import { ProjectsProvider } from "providers";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import { database } from "services";
@@ -18,9 +19,23 @@ export const App = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Projects />} />
+      <Route
+        path="/"
+        element={
+          <ProjectsProvider>
+            <Projects />
+          </ProjectsProvider>
+        }
+      />
       <Route path="add-project" element={<AddProject />} />
-      <Route path="projects" element={<Projects />} />
+      <Route
+        path="projects"
+        element={
+          <ProjectsProvider>
+            <Projects />
+          </ProjectsProvider>
+        }
+      />
       <Route path="projects/:projectId" element={<Project />} />
     </Routes>
   );
