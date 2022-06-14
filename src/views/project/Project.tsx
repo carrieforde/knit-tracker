@@ -2,19 +2,20 @@ import { Typography } from "@mui/material";
 import { Layout } from "components/Layout/Layout";
 import { useProjects } from "hooks";
 import { capitalize } from "lodash";
-import React, { useCallback, useEffect } from "react";
-import { useParams } from "react-router";
+import { useProjectContext } from "providers";
+import React, { useCallback } from "react";
 import { updateProject, UpdateType } from "services";
 import { CounterType, IProjectStatus } from "types";
 import { Counter } from "./components";
 
 export const Project = () => {
-  const { projectId } = useParams();
-  const { project, getProject, patchProject } = useProjects();
+  const { patchProject } = useProjects();
+
+  const project = useProjectContext();
 
   const handleCounters = useCallback(
     (updateType: UpdateType) => {
-      if (!project || !projectId) {
+      if (!project) {
         return null;
       }
 
@@ -22,7 +23,7 @@ export const Project = () => {
 
       patchProject(value);
     },
-    [project, projectId, patchProject]
+    [project, patchProject]
   );
 
   const handleIncreaseRow = useCallback(
@@ -44,12 +45,6 @@ export const Project = () => {
     () => handleCounters(UpdateType.decrementRepeat),
     [handleCounters]
   );
-
-  useEffect(() => {
-    if (!project && projectId) {
-      getProject(projectId);
-    }
-  }, [getProject, project, projectId]);
 
   if (!project) {
     return null;

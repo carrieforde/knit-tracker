@@ -9,11 +9,11 @@ import {
 import { database } from "services";
 import { IProject } from "types";
 
-export type ProjectProviderContext = IProject[] | null;
+export type ProjectsProviderContext = IProject[] | null;
 
 export const defaultProjectsProviderContextValue = null;
 
-export const ProjectsContext = createContext<ProjectProviderContext>(
+export const ProjectsContext = createContext<ProjectsProviderContext>(
   defaultProjectsProviderContextValue
 );
 
@@ -27,6 +27,10 @@ export const ProjectsProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     getProjects();
+
+    return () => {
+      setProjects(null);
+    };
   }, [getProjects]);
 
   const memoizedValue = useMemo(() => projects, [projects]);
