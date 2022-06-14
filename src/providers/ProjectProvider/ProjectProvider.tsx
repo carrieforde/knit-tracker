@@ -1,3 +1,4 @@
+import { noop } from "lodash";
 import {
   createContext,
   useCallback,
@@ -7,12 +8,22 @@ import {
   useState,
 } from "react";
 import { useParams } from "react-router-dom";
-import { database } from "services";
+import {
+  database,
+  updateProject as serviceUpdateProject,
+  UpdateType,
+} from "services";
 import { IProject } from "types";
 
-export type ProjectProviderContext = IProject | null;
+export type ProjectProviderContext = {
+  project: IProject | null;
+  updateProject: (project: IProject | null, updateType: UpdateType) => void;
+};
 
-export const defaultProjectProviderContextValue: ProjectProviderContext = null;
+export const defaultProjectProviderContextValue: ProjectProviderContext = {
+  project: null,
+  updateProject: noop,
+};
 
 export const ProjectContext = createContext<ProjectProviderContext>(
   defaultProjectProviderContextValue
@@ -28,6 +39,20 @@ export const ProjectProvider: React.FC = ({ children }) => {
     }
   }, [projectId]);
 
+  const updateProject = useCallback(
+    (project: IProject | null, updateType: UpdateType) => {
+      if (!project) {
+        console.error("Unable to update project");
+        return null;
+      }
+
+      const value = serviceUpdateProject(project, updateType);
+
+      database.updateProject(value, setProject);
+    },
+    []
+  );
+
   useEffect(() => {
     getProject();
 
@@ -36,7 +61,10 @@ export const ProjectProvider: React.FC = ({ children }) => {
     };
   }, [getProject]);
 
-  const memoizedValue = useMemo(() => project, [project]);
+  const memoizedValue = useMemo(
+    () => ({ project, updateProject }),
+    [project, updateProject]
+  );
 
   return (
     <ProjectContext.Provider value={memoizedValue}>
