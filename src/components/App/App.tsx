@@ -1,3 +1,4 @@
+import { FullScreenLoader } from "components";
 import { ProjectProvider, ProjectsProvider } from "providers";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
@@ -14,7 +15,7 @@ export const App = () => {
   }, [dbInitialized]);
 
   if (!dbInitialized) {
-    return <>Loading...</>;
+    return <FullScreenLoader />;
   }
 
   return (

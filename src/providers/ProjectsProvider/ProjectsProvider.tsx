@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useNavigate } from "react-router";
 import { database } from "services";
 import { IProject } from "types";
 
@@ -18,11 +19,21 @@ export const ProjectsContext = createContext<ProjectsProviderContext>(
 );
 
 export const ProjectsProvider: React.FC = ({ children }) => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<IProject[] | null>(null);
 
+  const handleRedirect = useCallback(
+    (projectsLength?: number) => {
+      if (!projectsLength || projectsLength <= 0) {
+        navigate("/add-project");
+      }
+    },
+    [navigate]
+  );
+
   const getProjects = useCallback(
-    () => database.getAllProjects(setProjects),
-    []
+    () => database.getAllProjects(setProjects, handleRedirect),
+    [handleRedirect]
   );
 
   useEffect(() => {
