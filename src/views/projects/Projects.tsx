@@ -1,10 +1,10 @@
 import { Layout } from "components/Layout/Layout";
-import { useProjects } from "hooks";
+import { useProjectsContext } from "providers";
 import React from "react";
 import { AddProjectButton, ProjectCard } from "./components";
 
 export const Projects = () => {
-  const { projects } = useProjects();
+  const projects = useProjectsContext();
 
   if (!projects || !projects.length) {
     return null;

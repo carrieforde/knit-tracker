@@ -1,42 +1,45 @@
-import { useCallback, useEffect, useState } from "react";
-import { database } from "services";
-import { IProject } from "types";
+import { useProjectContext } from "providers";
+import { useCallback } from "react";
+import { UpdateType } from "services";
 
 export const useProjects = () => {
-  const [projects, setProjects] = useState<IProject[] | null>(null);
-  const [project, setProject] = useState<IProject | null>(null);
+  const { project, updateProject } = useProjectContext();
 
-  const getProjects = useCallback(
-    () => database.getAllProjects(setProjects),
-    []
-  );
+  const handleCounters = useCallback(
+    (updateType: UpdateType) => {
+      if (!project) {
+        return;
+      }
 
-  const getProject = useCallback(
-    (slug: string) => database.getProject(slug, setProject),
-    []
-  );
-
-  const patchProject = useCallback(
-    (project: IProject) => {
-      database.updateProject(project);
-      getProject(project.slug);
+      updateProject(project, updateType);
     },
-    [getProject]
+    [project, updateProject]
   );
 
-  const resetProject = useCallback(() => setProject(null), []);
+  const handleIncrementRow = useCallback(
+    () => handleCounters(UpdateType.incrementRow),
+    [handleCounters]
+  );
 
-  useEffect(() => {
-    if (!projects || !projects.length) {
-      getProjects();
-    }
-  }, [getProjects, projects]);
+  const handleDecrementRow = useCallback(
+    () => handleCounters(UpdateType.decrementRow),
+    [handleCounters]
+  );
+
+  const handleIncrementRepeat = useCallback(
+    () => handleCounters(UpdateType.incrementRepeat),
+    [handleCounters]
+  );
+
+  const handleDecrementRepeat = useCallback(
+    () => handleCounters(UpdateType.decrementRepeat),
+    [handleCounters]
+  );
 
   return {
-    projects,
-    getProject,
-    project,
-    resetProject,
-    patchProject,
+    handleIncrementRow,
+    handleDecrementRow,
+    handleIncrementRepeat,
+    handleDecrementRepeat,
   };
 };

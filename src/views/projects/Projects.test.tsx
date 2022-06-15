@@ -1,70 +1,60 @@
 import { render, screen } from "@testing-library/react";
-import { useProjects } from "hooks";
 import React, { ReactNode } from "react";
 import { BrowserRouter } from "react-router-dom";
+import { TestProjectsProvider } from "test-utilities/test-providers";
+import { testCreateProject } from "test-utilities/test-utilities";
 import { CounterType, IProject, IProjectStatus } from "types";
 import { Projects } from "./Projects";
 
-jest.mock("hooks", () => ({
-  ...jest.requireActual("hooks"),
-  useProjects: jest.fn(() => ({
-    projects: jest.fn(),
-  })),
-}));
+const projects = [
+  testCreateProject({
+    name: "my project",
+    slug: "my-project",
+    counters: [
+      { type: CounterType.ROW, currentCount: 0, maxCount: 5 },
+      { type: CounterType.REPEAT, currentCount: 0, maxCount: 0 },
+      false,
+    ],
+    progress: 0,
+    status: IProjectStatus.notStarted,
+    timestamps: {
+      added: null,
+      started: null,
+      updated: null,
+      completed: null,
+    },
+  }),
+];
 
-const mockedUseProjects = jest.mocked(useProjects);
-const projects = jest.fn();
+const createWrapper = (wrapperProjects: IProject[] | null = projects) =>
+  function Wrapper({ children }: { children: ReactNode }) {
+    return (
+      <BrowserRouter>
+        <TestProjectsProvider projects={wrapperProjects}>
+          {children}
+        </TestProjectsProvider>
+      </BrowserRouter>
+    );
+  };
 
-const wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
-  <BrowserRouter>{children}</BrowserRouter>
-);
+function renderProjects(renderProjects?: IProject[] | null) {
+  const wrapper = createWrapper(renderProjects);
+  render(<Projects />, { wrapper });
+}
 
 describe("Projects", () => {
-  beforeEach(() => {
-    mockedUseProjects.mockReturnValue({ projects } as unknown as ReturnType<
-      typeof useProjects
-    >);
-  });
-
   it("should not render when there are no projects", () => {
-    projects.mockReturnValue(null);
-    render(<Projects />, { wrapper });
-
+    renderProjects(null);
     expect(screen.queryByTestId("projects")).not.toBeInTheDocument();
   });
 
   it("should not render when the project array is empty", () => {
-    projects.mockReturnValue([]);
-    render(<Projects />, { wrapper });
-
+    renderProjects([]);
     expect(screen.queryByTestId("projects")).not.toBeInTheDocument();
   });
 
   it("should render when projects exist", () => {
-    mockedUseProjects.mockReturnValue({
-      projects: [
-        {
-          name: "my project",
-          slug: "my-project",
-          counters: [
-            { type: CounterType.ROW, currentCount: 0, maxCount: 5 },
-            { type: CounterType.REPEAT, currentCount: 0, maxCount: 0 },
-            false,
-          ],
-          progress: 0,
-          status: IProjectStatus.notStarted,
-          timestamps: {
-            added: null,
-            started: null,
-            updated: null,
-            completed: null,
-          },
-        },
-      ] as IProject[],
-    } as unknown as ReturnType<typeof useProjects>);
-
-    render(<Projects />, { wrapper });
-
+    renderProjects();
     expect(screen.getByTestId("projects")).toBeInTheDocument();
   });
 });

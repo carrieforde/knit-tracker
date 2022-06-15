@@ -1,57 +1,21 @@
 import { Typography } from "@mui/material";
 import { Layout } from "components/Layout/Layout";
 import { useProjects } from "hooks";
-import { capitalize } from "lodash";
-import React, { useCallback, useEffect } from "react";
-import { useParams } from "react-router";
-import { updateProject, UpdateType } from "services";
+import { isEmpty, isNull } from "lodash";
+import { useProjectContext } from "providers";
 import { CounterType, IProjectStatus } from "types";
 import { Counter } from "./components";
 
 export const Project = () => {
-  const { projectId } = useParams();
-  const { project, getProject, patchProject } = useProjects();
+  const {
+    handleDecrementRepeat,
+    handleDecrementRow,
+    handleIncrementRepeat,
+    handleIncrementRow,
+  } = useProjects();
+  const { project } = useProjectContext();
 
-  const handleCounters = useCallback(
-    (updateType: UpdateType) => {
-      if (!project || !projectId) {
-        return null;
-      }
-
-      const value = updateProject(project, updateType);
-
-      patchProject(value);
-    },
-    [project, projectId, patchProject]
-  );
-
-  const handleIncreaseRow = useCallback(
-    () => handleCounters(UpdateType.incrementRow),
-    [handleCounters]
-  );
-
-  const handleDecreaseRow = useCallback(
-    () => handleCounters(UpdateType.decrementRow),
-    [handleCounters]
-  );
-
-  const handleIncreaseRepeat = useCallback(
-    () => handleCounters(UpdateType.incrementRepeat),
-    [handleCounters]
-  );
-
-  const handleDecreaseRepeat = useCallback(
-    () => handleCounters(UpdateType.decrementRepeat),
-    [handleCounters]
-  );
-
-  useEffect(() => {
-    if (!project && projectId) {
-      getProject(projectId);
-    }
-  }, [getProject, project, projectId]);
-
-  if (!project) {
+  if (isEmpty(project) || isNull(project)) {
     return null;
   }
 
@@ -69,18 +33,18 @@ export const Project = () => {
       <Typography>{name}</Typography>
       <Counter
         disabled={isDisabled}
-        title={capitalize(CounterType.ROW)}
+        type={CounterType.ROW}
         value={rowCounter.currentCount}
-        onDecrease={handleDecreaseRow}
-        onIncrease={handleIncreaseRow}
+        onDecrement={handleDecrementRow}
+        onIncrement={handleIncrementRow}
       />
 
       <Counter
         disabled={isDisabled}
-        title="Repeats"
+        type={CounterType.REPEAT}
         value={repeatCounter.currentCount}
-        onDecrease={handleDecreaseRepeat}
-        onIncrease={handleIncreaseRepeat}
+        onDecrement={handleDecrementRepeat}
+        onIncrement={handleIncrementRepeat}
       />
     </Layout>
   );

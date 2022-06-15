@@ -77,11 +77,16 @@ export class Database {
     }
   }
 
-  updateProject(project: IProject) {
+  updateProject(
+    project: IProject,
+    setProject: React.Dispatch<SetStateAction<IProject | null>>
+  ) {
     const objectStore = this.getObjectStore("readwrite");
 
     if (objectStore) {
-      objectStore.put(project);
+      objectStore.put(project).onsuccess = () => {
+        this.getProject(project.slug, setProject);
+      };
     }
   }
 }
