@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { UpdateType } from "services";
 import { IProject } from "types";
-import { ProjectContext } from "providers";
+import { ProjectContext, ProjectsContext } from "providers";
 
 type TestProjectProviderProps = {
   project?: IProject | null;
@@ -25,5 +25,22 @@ export const TestProjectProvider: React.FC<TestProjectProviderProps> = ({
     <ProjectContext.Provider value={memoizedValues}>
       {children}
     </ProjectContext.Provider>
+  );
+};
+
+type TestProjectsProviderProps = {
+  projects?: IProject[] | null;
+};
+
+export const TestProjectsProvider: React.FC<TestProjectsProviderProps> = ({
+  children,
+  projects,
+}) => {
+  const memoizedValues = useMemo(() => projects ?? null, [projects]);
+
+  return (
+    <ProjectsContext.Provider value={memoizedValues}>
+      {children}
+    </ProjectsContext.Provider>
   );
 };
