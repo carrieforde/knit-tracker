@@ -1,31 +1,45 @@
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { Box, IconButton, Typography } from "@mui/material";
+import { capitalize } from "lodash";
 import React from "react";
+import { CounterType } from "types";
 
 export type CounterProps = {
   disabled: boolean;
   value: number;
-  title: string;
-  onIncrease: () => void;
-  onDecrease: () => void;
+  type: CounterType;
+  onIncrement: () => void;
+  onDecrement: () => void;
 };
 
 export const Counter: React.FC<CounterProps> = ({
   disabled,
   value,
-  title,
-  onDecrease,
-  onIncrease,
-}) => (
-  <Box>
-    <Typography>{title}</Typography>
-    <IconButton disabled={disabled} onClick={onDecrease}>
-      <RemoveIcon />
-    </IconButton>
-    {value}
-    <IconButton disabled={disabled} onClick={onIncrease}>
-      <AddIcon />
-    </IconButton>
-  </Box>
-);
+  type,
+  onDecrement,
+  onIncrement,
+}) => {
+  const title = capitalize(type);
+
+  return (
+    <Box>
+      <Typography>{title}</Typography>
+      <IconButton
+        disabled={disabled}
+        onClick={onDecrement}
+        data-testid={`${type}-decrement`}
+      >
+        <RemoveIcon />
+      </IconButton>
+      {value}
+      <IconButton
+        disabled={disabled}
+        onClick={onIncrement}
+        data-testid={`${type}-increment`}
+      >
+        <AddIcon />
+      </IconButton>
+    </Box>
+  );
+};
