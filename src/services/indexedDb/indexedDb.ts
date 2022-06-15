@@ -58,13 +58,15 @@ export class Database {
   }
 
   getAllProjects(
-    setProjects: React.Dispatch<SetStateAction<IProject[] | null>>
+    setProjects: React.Dispatch<SetStateAction<IProject[] | null>>,
+    onRedirect: (projectsLength?: number) => void
   ) {
     const objectStore = this.getObjectStore();
 
     if (objectStore) {
       objectStore.getAll().onsuccess = (evt) => {
         setProjects((evt.target as any).result);
+        onRedirect((evt.target as any).result.length);
       };
     }
   }
