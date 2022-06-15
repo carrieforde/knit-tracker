@@ -1,4 +1,4 @@
-import { ProjectContext, ProjectProvider, ProjectsProvider } from "providers";
+import { ProjectProvider, ProjectsProvider } from "providers";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import { database } from "services";
