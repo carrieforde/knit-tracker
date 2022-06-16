@@ -6,11 +6,11 @@
     "build": "react-scripts build",
     "format": "prettier --list-different --write .",
     "lighthouse": "lhci autorun",
-    // "lint": "run-p -c lint:es lint:style",
-    // "lint:ci": "run-s -c lint:es lint:style",
-    // "lint:es": "eslint './src/**/*.{js,jsx,ts,tsx}' --max-warnings=10",
-    // "lint:style": "stylelint './src/**/*.{css,scss}'",
-    // "preflight": "run-s -c format lint test",
+    "lint": "run-p -c lint:es lint:style",
+    "lint:ci": "run-s -c lint:es lint:style",
+    "lint:es": "eslint './src/**/*.{js,jsx,ts,tsx}' --max-warnings=10",
+    "lint:style": "stylelint './src/**/*.{css,scss}'",
+    "preflight": "run-s -c format lint test",
     "serve": "serve -s build -l 4200",
     "start": "react-scripts start",
     "test": "react-scripts test --watchAll=false --maxWorkers=50% --coverage --testResultsProcessor jest-sonar-reporter",
@@ -107,10 +107,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
+        "branches": 65,
+        "functions": 55,
+        "lines": 65,
+        "statements": 65
       }
     }
   }
