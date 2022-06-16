@@ -1,0 +1,9 @@
+language: node_js
+addons:
+  sonarcloud:
+    organization: carrieforde
+    token:
+      secure: SONAR_TOKEN
+script:
+  - yarn test
+  - sonar-scanner
