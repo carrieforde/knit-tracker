@@ -6,18 +6,21 @@
     "build": "react-scripts build",
     "format": "prettier --list-different --write .",
     "lighthouse": "lhci autorun",
-    "lint": "run-p -c lint:es lint:style",
-    "lint:ci": "run-s -c lint:es lint:style",
-    "lint:es": "eslint './src/**/*.{js,jsx,ts,tsx}' --max-warnings=10",
-    "lint:style": "stylelint './src/**/*.{css,scss}'",
-    "preflight": "run-s -c format lint test",
+    // "lint": "run-p -c lint:es lint:style",
+    // "lint:ci": "run-s -c lint:es lint:style",
+    // "lint:es": "eslint './src/**/*.{js,jsx,ts,tsx}' --max-warnings=10",
+    // "lint:style": "stylelint './src/**/*.{css,scss}'",
+    // "preflight": "run-s -c format lint test",
     "serve": "serve -s build -l 4200",
     "start": "react-scripts start",
     "test": "react-scripts test --watchAll=false --maxWorkers=50% --coverage --testResultsProcessor jest-sonar-reporter",
     "test:ci": "react-scripts test --watchAll=false --maxWorkers=2 --coverage --testResultsProcessor jest-sonar-reporter",
-    "test:watch": "react-scripts test --watch --maxWorkers=25%"
+    "test:watch": "react-scripts test --watch --maxWorkers=25%",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.0.2",
+    "@commitlint/config-conventional": "^17.0.2",
     "@lhci/cli": "^0.8.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
@@ -28,8 +31,10 @@
     "@types/node": "^16.7.13",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint-config-prettier": "^8.3.0",
-    "husky": "^7.0.0",
+    "husky": "^8.0.0",
     "jest-sonar-reporter": "^2.0.0",
     "lint-staged": "^12.1.2",
     "npm-run-all": "^4.1.5",
@@ -69,9 +74,9 @@
       "last 1 safari version"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
     }
   },
   "lint-staged": {
