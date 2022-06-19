@@ -17,8 +17,8 @@ export class Database {
       setInitialized(true);
 
       // A generic error handler
-      this.db.onerror = (evt) => {
-        console.error(`Database error: ${(evt.target as any).errorCode}`);
+      this.db.onerror = (e) => {
+        console.error(`Database error: ${(e.target as any).errorCode}`);
       };
     };
 

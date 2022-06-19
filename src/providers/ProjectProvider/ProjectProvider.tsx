@@ -40,13 +40,13 @@ export const ProjectProvider: React.FC = ({ children }) => {
   }, [projectId]);
 
   const updateProject = useCallback(
-    (project: IProject | null, updateType: UpdateType) => {
-      if (!project) {
+    (updatedProject: IProject | null, updateType: UpdateType) => {
+      if (!updatedProject) {
         console.error("Unable to update project");
         return null;
       }
 
-      const value = serviceUpdateProject(project, updateType);
+      const value = serviceUpdateProject(updatedProject, updateType);
 
       database.updateProject(value, setProject);
     },

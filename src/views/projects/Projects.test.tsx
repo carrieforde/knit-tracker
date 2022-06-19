@@ -37,8 +37,8 @@ const createWrapper = (wrapperProjects: IProject[] | null = projects) =>
     );
   };
 
-function renderProjects(renderProjects?: IProject[] | null) {
-  const wrapper = createWrapper(renderProjects);
+function renderProjects(projectsData?: IProject[] | null) {
+  const wrapper = createWrapper(projectsData);
   render(<Projects />, { wrapper });
 }
 
