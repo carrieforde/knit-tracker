@@ -102,8 +102,7 @@
       "!src/constants/*.{js,jsx,ts,tsx}",
       "!src/__mocks__/*.{js,jsx,ts,tsx}",
       "!src/test-utilities/*.{js,jsx,ts,tsx}",
-      "!src/mui/*.{js,jsx,ts,tsx}",
-      "!src/services/rest/rest.ts"
+      "!src/mui/*.{js,jsx,ts,tsx}"
     ],
     "coverageThreshold": {
       "global": {
