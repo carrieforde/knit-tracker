@@ -1,5 +1,4 @@
 import { FullScreenLoader } from "components";
-import { ProjectProvider, ProjectsProvider } from "providers";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import { database } from "services";
@@ -19,20 +18,11 @@ export const App = () => {
   }
 
   return (
-    <ProjectsProvider>
-      <Routes>
-        <Route path="/" element={<Projects />} />
-        <Route path="add-project" element={<AddProject />} />
-        <Route path="projects" element={<Projects />} />
-        <Route
-          path="projects/:projectId"
-          element={
-            <ProjectProvider>
-              <Project />
-            </ProjectProvider>
-          }
-        />
-      </Routes>
-    </ProjectsProvider>
+    <Routes>
+      <Route path="/" element={<Projects />} />
+      <Route path="add-project" element={<AddProject />} />
+      <Route path="projects" element={<Projects />} />
+      <Route path="projects/:projectId" element={<Project />} />
+    </Routes>
   );
 };

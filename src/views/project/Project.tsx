@@ -2,18 +2,32 @@ import { Typography } from "@mui/material";
 import { Layout } from "components/Layout/Layout";
 import { useProjects } from "hooks";
 import { isEmpty, isNull } from "lodash";
-import { useProjectContext } from "providers";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { database } from "services";
+import { resetProject, setProject, useProjectsState } from "store";
 import { CounterType, IProjectStatus } from "types";
 import { Counter } from "./components";
 
 export const Project = () => {
+  const { projectId } = useParams();
   const {
     handleDecrementRepeat,
     handleDecrementRow,
     handleIncrementRepeat,
     handleIncrementRow,
   } = useProjects();
-  const { project } = useProjectContext();
+  const { project } = useProjectsState();
+
+  useEffect(() => {
+    if (projectId) {
+      database.getProject(projectId, setProject);
+    }
+
+    return () => {
+      resetProject();
+    };
+  }, [projectId]);
 
   if (isEmpty(project) || isNull(project)) {
     return null;

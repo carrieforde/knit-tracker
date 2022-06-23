@@ -1,10 +1,21 @@
 import { Layout } from "components/Layout/Layout";
-import { useProjectsContext } from "providers";
-import React from "react";
+import { useProjects } from "hooks";
+import { useEffect } from "react";
+import { database } from "services";
+import { resetProjects, setProjects, useProjectsState } from "store";
 import { AddProjectButton, ProjectCard } from "./components";
 
 export const Projects = () => {
-  const projects = useProjectsContext();
+  const { handleAddProjectRedirect } = useProjects();
+  const { projects } = useProjectsState();
+
+  useEffect(() => {
+    database.getAllProjects(setProjects, handleAddProjectRedirect);
+
+    return () => {
+      resetProjects();
+    };
+  }, [handleAddProjectRedirect]);
 
   if (!projects || !projects.length) {
     return null;

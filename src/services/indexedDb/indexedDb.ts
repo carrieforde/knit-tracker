@@ -44,10 +44,7 @@ export class Database {
     return this.db?.transaction(DB_STORE_NAME, mode).objectStore(DB_STORE_NAME);
   }
 
-  getProject(
-    slug: string,
-    setProject: React.Dispatch<SetStateAction<IProject | null>>
-  ) {
+  getProject(slug: string, setProject: (project: IProject) => void) {
     const objectStore = this.getObjectStore();
 
     if (objectStore) {
@@ -58,7 +55,7 @@ export class Database {
   }
 
   getAllProjects(
-    setProjects: React.Dispatch<SetStateAction<IProject[] | null>>,
+    setProjects: (projects: IProject[]) => void,
     onRedirect: (projectsLength?: number) => void
   ) {
     const objectStore = this.getObjectStore();
@@ -79,10 +76,7 @@ export class Database {
     }
   }
 
-  updateProject(
-    project: IProject,
-    setProject: React.Dispatch<SetStateAction<IProject | null>>
-  ) {
+  updateProject(project: IProject, setProject: (project: IProject) => void) {
     const objectStore = this.getObjectStore("readwrite");
 
     if (objectStore) {

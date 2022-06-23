@@ -1,11 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ReactNode } from "react";
-import { UpdateType } from "services";
-import { TestProjectProvider } from "test-utilities/test-providers";
+import { BrowserRouter } from "react-router-dom";
+import { updateProject, UpdateType } from "services";
+import { useProjectsStateMock } from "test-utilities/test-state";
 import { testCreateProject } from "test-utilities/test-utilities";
-import { CounterType, IProject, IProjectStatus } from "types";
+import { CounterType, IProjectStatus } from "types";
 import { Project } from "./Project";
+
+jest.mock("services", () => ({
+  ...jest.requireActual("services"),
+  updateProject: jest.fn(),
+}));
 
 const project = testCreateProject({
   name: "A project",
@@ -22,22 +27,12 @@ const project = testCreateProject({
   },
   status: IProjectStatus.inProgress,
 });
-const updateProject = jest.fn();
 
-const createWrapper = (wrapperProject: IProject | null = project) =>
-  function Wrapper({ children }: { children: ReactNode }) {
-    return (
-      <TestProjectProvider
-        project={wrapperProject}
-        updateProject={updateProject}
-      >
-        {children}
-      </TestProjectProvider>
-    );
-  };
+const wrapper: React.FC = ({ children }) => (
+  <BrowserRouter>{children}</BrowserRouter>
+);
 
-function renderProject(projectData?: IProject | null) {
-  const wrapper = createWrapper(projectData);
+function renderProject() {
   render(<Project />, { wrapper });
 }
 
@@ -55,8 +50,17 @@ function getElements() {
 }
 
 describe("Project", () => {
+  beforeEach(() => {
+    useProjectsStateMock({ project });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should not render if the project is null or undefined", () => {
-    renderProject(null);
+    useProjectsStateMock();
+    renderProject();
     const { incrementRowButton } = getElements();
 
     expect(incrementRowButton).not.toBeInTheDocument();
