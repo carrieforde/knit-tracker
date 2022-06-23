@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import React, { ReactNode } from "react";
+import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import { TestProjectsProvider } from "test-utilities/test-providers";
+import { useProjectsStateMock } from "test-utilities/test-state";
 import { testCreateProject } from "test-utilities/test-utilities";
-import { CounterType, IProject, IProjectStatus } from "types";
+import { CounterType, IProjectStatus } from "types";
 import { Projects } from "./Projects";
 
 const projects = [
@@ -26,30 +26,32 @@ const projects = [
   }),
 ];
 
-const createWrapper = (wrapperProjects: IProject[] | null = projects) =>
-  function Wrapper({ children }: { children: ReactNode }) {
-    return (
-      <BrowserRouter>
-        <TestProjectsProvider projects={wrapperProjects}>
-          {children}
-        </TestProjectsProvider>
-      </BrowserRouter>
-    );
-  };
+const wrapper: React.FC = ({ children }) => (
+  <BrowserRouter>{children}</BrowserRouter>
+);
 
-function renderProjects(renderProjects?: IProject[] | null) {
-  const wrapper = createWrapper(renderProjects);
+function renderProjects() {
   render(<Projects />, { wrapper });
 }
 
 describe("Projects", () => {
+  beforeEach(() => {
+    useProjectsStateMock({ projects });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should not render when there are no projects", () => {
-    renderProjects(null);
+    useProjectsStateMock();
+    renderProjects();
     expect(screen.queryByTestId("projects")).not.toBeInTheDocument();
   });
 
   it("should not render when the project array is empty", () => {
-    renderProjects([]);
+    useProjectsStateMock({ projects: [] });
+    renderProjects();
     expect(screen.queryByTestId("projects")).not.toBeInTheDocument();
   });
 

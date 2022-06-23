@@ -1,9 +1,20 @@
-import { useProjectContext } from "providers";
 import { useCallback } from "react";
-import { UpdateType } from "services";
+import { useNavigate } from "react-router-dom";
+import { database, updateProject, UpdateType } from "services";
+import { setProject, useProjectsState } from "store";
 
 export const useProjects = () => {
-  const { project, updateProject } = useProjectContext();
+  const navigate = useNavigate();
+  const { project } = useProjectsState();
+
+  const handleAddProjectRedirect = useCallback(
+    (projectsLength?: number) => {
+      if (!projectsLength || projectsLength <= 0) {
+        navigate("/add-project");
+      }
+    },
+    [navigate]
+  );
 
   const handleCounters = useCallback(
     (updateType: UpdateType) => {
@@ -11,9 +22,11 @@ export const useProjects = () => {
         return;
       }
 
-      updateProject(project, updateType);
+      const value = updateProject(project, updateType);
+
+      database.updateProject(value, setProject);
     },
-    [project, updateProject]
+    [project]
   );
 
   const handleIncrementRow = useCallback(
@@ -41,5 +54,6 @@ export const useProjects = () => {
     handleDecrementRow,
     handleIncrementRepeat,
     handleDecrementRepeat,
+    handleAddProjectRedirect,
   };
 };
